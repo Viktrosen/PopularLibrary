@@ -1,5 +1,7 @@
 package com.hfrad.popularlibrary.mvp.model.entity;
 
+
+
 public class GithubUser {
     private String login;
 
@@ -10,4 +12,5 @@ public class GithubUser {
     public String getLogin() {
         return login;
     }
+
 }
