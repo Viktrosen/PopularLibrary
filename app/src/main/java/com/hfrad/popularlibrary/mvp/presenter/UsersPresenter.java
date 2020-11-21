@@ -1,9 +1,14 @@
 package com.hfrad.popularlibrary.mvp.presenter;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
+
 
 import com.hfrad.popularlibrary.GithubApplication;
 import com.hfrad.popularlibrary.R;
@@ -13,9 +18,14 @@ import com.hfrad.popularlibrary.mvp.presenter.list.IUserListPresenter;
 import com.hfrad.popularlibrary.mvp.view.UserItemView;
 import com.hfrad.popularlibrary.mvp.view.UsersView;
 import com.hfrad.popularlibrary.navigation.Screens;
+import com.hfrad.popularlibrary.ui.fragments.UsersFragment;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +39,26 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
 
     private GithubUserRepo repos = new GithubUserRepo();
     private List<String> logins = new ArrayList<>();
+
+    boolean success=false;
+
+    public String getImage() {
+        return image;
+    }
+
+    private String image;
+
+    public void convert() throws IOException {
+        if (UsersFragment.isViewed){
+            Bitmap bmp = BitmapFactory.decodeFile(image);
+            File convertedImage = new File(Environment.getExternalStorageDirectory()+"/leopard.png");
+            FileOutputStream outStream=new FileOutputStream(convertedImage);
+            success=bmp.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+            outStream.flush();
+            outStream.close();
+        }
+    }
+
 
     private final Observer userObserver = (Observer)(new Observer() {
         @Nullable
@@ -53,7 +83,10 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
         }
 
         public void onNext(@Nullable GithubUser s) {
-            Log.d("Consumer", "onNext: " + logins.add(s.getLogin()));
+            image = s.getImage();
+            Log.d("Consumer", "onNext: " +image);
+
+
         }
 
 
@@ -97,9 +130,10 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
             }
         }
 
+
         @Override
         public void bindView(UserItemView view) {
-            repos.just().subscribe(userObserver);
+            repos.fromCallable().subscribe(userObserver);
             GithubUser user = users.get(view.getPos());
             view.setLogin(user.getLogin());
         }
@@ -126,8 +160,8 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
     }
 
     private void loadData() {
-        List<GithubUser> users = usersRepo.getUsers();
-        usersListPresenter.users.addAll(users);
+       // List<GithubUser> users = usersRepo.getUsers();
+        //usersListPresenter.users.addAll(users);
         getViewState().updateList();
     }
 
