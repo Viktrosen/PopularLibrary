@@ -1,141 +1,75 @@
 package com.hfrad.popularlibrary.mvp.presenter;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
+import io.reactivex.rxjava3.core.Scheduler;
+import moxy.MvpPresenter;
 import com.hfrad.popularlibrary.GithubApplication;
-import com.hfrad.popularlibrary.R;
 import com.hfrad.popularlibrary.mvp.model.entity.GithubUser;
 import com.hfrad.popularlibrary.mvp.model.entity.GithubUserRepo;
+import com.hfrad.popularlibrary.mvp.model.entity.Repos;
+import com.hfrad.popularlibrary.mvp.model.repo.IGithubUsersRepo;
+import com.hfrad.popularlibrary.mvp.model.repo.retrofit.RetrofitGithubUsersRepo;
 import com.hfrad.popularlibrary.mvp.presenter.list.IUserListPresenter;
 import com.hfrad.popularlibrary.mvp.view.UserItemView;
 import com.hfrad.popularlibrary.mvp.view.UsersView;
 import com.hfrad.popularlibrary.navigation.Screens;
-import com.hfrad.popularlibrary.ui.fragments.UsersFragment;
+import com.hfrad.popularlibrary.ui.fragments.UserFragment;
 
-import org.jetbrains.annotations.Nullable;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.Disposable;
-import moxy.MvpPresenter;
 import ru.terrakok.cicerone.Router;
-import io.reactivex.rxjava3.core.Observable;
 
 public class UsersPresenter extends MvpPresenter<UsersView>  {
-
-    private GithubUserRepo repos = new GithubUserRepo();
-    private List<String> logins = new ArrayList<>();
-
-    boolean success=false;
-
-    public String getImage() {
-        return image;
-    }
-
-    private String image;
-
-    public void convert() throws IOException {
-        if (UsersFragment.isViewed){
-            Bitmap bmp = BitmapFactory.decodeFile(image);
-            File convertedImage = new File(Environment.getExternalStorageDirectory()+"/leopard.png");
-            FileOutputStream outStream=new FileOutputStream(convertedImage);
-            success=bmp.compress(Bitmap.CompressFormat.PNG, 100, outStream);
-            outStream.flush();
-            outStream.close();
-        }
-    }
-
-
-    private final Observer userObserver = (Observer)(new Observer() {
-        @Nullable
-        private Disposable disposable;
-
-        @Nullable
-        public final Disposable getDisposable() {
-            return this.disposable;
-        }
-
-        public final void setDisposable(@Nullable Disposable var1) {
-            this.disposable = var1;
-        }
-
-        public void onComplete() {
-            Log.d("Consumer", "onComplete: ");
-        }
-
-        public void onSubscribe(@Nullable Disposable d) {
-            this.disposable = d;
-            Log.d("Consumer", "onSubscribe: ");
-        }
-
-        public void onNext(@Nullable GithubUser s) {
-            image = s.getImage();
-            Log.d("Consumer", "onNext: " +image);
-
-
-        }
-
-
-        public void onNext(Object var1) {
-            this.onNext((GithubUser)var1);
-        }
-
-        public void onError(@Nullable Throwable e) {
-            Log.d("Consumer", "onError: " + (e != null ? e.getMessage() : null));
-        }
-    });
-
-
-
     private static final String TAG = UsersPresenter.class.getSimpleName();
-    private static String login;
-
-
-
-    public static String getLogin() {
-        return login;
-    }
 
     private static final boolean VERBOSE = true;
 
-    private GithubUserRepo usersRepo = new GithubUserRepo();
+    private String login = "";
+
+
+
     private Router router = GithubApplication.getApplication().getRouter();
+
+    private final IGithubUsersRepo usersRepo;
+
+    private final Scheduler scheduler;
+
+    public UsersPresenter(Scheduler scheduler) {
+        this.scheduler = scheduler;
+
+        this.usersRepo = new RetrofitGithubUsersRepo(GithubApplication.INSTANCE.getApi());
+    }
 
     private class UsersListPresenter implements IUserListPresenter {
 
         private List<GithubUser> users = new ArrayList<>();
 
+
         @Override
         public void onItemClick(UserItemView view) {
+
+            UserFragment.login = users.get(view.getPos()).getLogin();
+            UserFragment.repo = users.get(view.getPos()).getRepos().get(0).getName();
             if (VERBOSE) {
                 Log.v(TAG, " onItemClick " + view.getPos());
-                login = logins.get(view.getPos());
-                //login = usersRepo.getUsers().get(view.getPos()).getLogin();
-                router.replaceScreen(new Screens.UserScreen());
-                Log.v(TAG, " LOGINPUT " + users.get(view.getPos()).getLogin());
-            }
-        }
 
+                Log.v(TAG, " onItemClick " + login);
+            }
+
+
+            router.navigateTo(new Screens.UserScreen());
+
+        }
 
         @Override
         public void bindView(UserItemView view) {
-            repos.fromCallable().subscribe(userObserver);
             GithubUser user = users.get(view.getPos());
             view.setLogin(user.getLogin());
+            view.loadAvatar(user.getAvatarUrl());
+
         }
 
         @Override
@@ -160,9 +94,16 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
     }
 
     private void loadData() {
-       // List<GithubUser> users = usersRepo.getUsers();
-        //usersListPresenter.users.addAll(users);
-        getViewState().updateList();
+        //List<GithubUser> users = usersRepo.getUsers();
+
+        usersRepo.getUsers().observeOn(scheduler).subscribe(repos -> {
+            usersListPresenter.users.clear();
+            usersListPresenter.users.addAll(repos);
+            getViewState().updateList();
+        }, (e) -> {
+            Log.w(TAG, "Error" + e.getMessage());
+        });
+
     }
 
     public boolean backPressed() {
@@ -171,3 +112,4 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
 
     }
 }
+

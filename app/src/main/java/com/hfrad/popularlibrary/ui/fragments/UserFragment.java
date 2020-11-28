@@ -17,19 +17,29 @@ import com.hfrad.popularlibrary.mvp.presenter.UsersPresenter;
 import com.hfrad.popularlibrary.mvp.view.UsersView;
 import com.hfrad.popularlibrary.ui.BackButtonListener;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
-import ru.terrakok.cicerone.Router;
+import moxy.presenter.ProvidePresenter;
 
 
 public class UserFragment extends MvpAppCompatFragment implements UsersView, BackButtonListener {
 
     private View view;
 
-    private TextView textView;
+    private TextView textViewLogin;
+    private TextView textViewRepos;
+
+    public static String login = "";
+    public static String repo = "";
 
     @InjectPresenter
     UsersPresenter userPresenter;
+
+    @ProvidePresenter
+    UsersPresenter provideUsersPresenter() {
+        return new UsersPresenter(AndroidSchedulers.mainThread());
+    }
 
 
     public static UserFragment getInstance(int data) {
@@ -59,10 +69,13 @@ public class UserFragment extends MvpAppCompatFragment implements UsersView, Bac
         view = inflater.inflate(R.layout.fragment_user, container, false);
 
 
-        Log.v("TAG", " LOGINGET " + UsersPresenter.getLogin());
+        Log.v("TAG", " LOGINGET " + login);
 
-        textView = (TextView)view.findViewById(R.id.login);
-        textView.setText(UsersPresenter.getLogin());
+        textViewLogin = (TextView)view.findViewById(R.id.login);
+        textViewLogin.setText(login);
+
+        textViewRepos = (TextView)view.findViewById(R.id.repos_url);
+        textViewRepos.setText(repo);
 
         return view;
     }
