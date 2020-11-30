@@ -1,12 +1,17 @@
 package com.hfrad.popularlibrary;
 
 import android.app.Application;
+import android.content.Context;
+
 import com.hfrad.popularlibrary.mvp.model.api.IDataSource;
 import ru.terrakok.cicerone.Cicerone;
 import ru.terrakok.cicerone.NavigatorHolder;
 import ru.terrakok.cicerone.Router;
 
 public class GithubApplication extends Application {
+
+    public static final boolean DEBUG = true;
+
     public static GithubApplication INSTANCE;
 
     private Cicerone<Router> cicerone;

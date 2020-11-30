@@ -1,10 +1,9 @@
 package com.hfrad.popularlibrary.mvp.presenter;
 
+import moxy.MvpPresenter;
 import com.hfrad.popularlibrary.GithubApplication;
 import com.hfrad.popularlibrary.mvp.view.MainView;
 import com.hfrad.popularlibrary.navigation.Screens;
-
-import moxy.MvpPresenter;
 import ru.terrakok.cicerone.Router;
 
 public class MainPresenter extends MvpPresenter<MainView> {

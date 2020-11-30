@@ -1,6 +1,5 @@
 package com.hfrad.popularlibrary.ui.fragments;
 
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +14,17 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
+import com.hfrad.popularlibrary.GithubApplication;
 import com.hfrad.popularlibrary.R;
+import com.hfrad.popularlibrary.mvp.model.entity.room.Database;
+import com.hfrad.popularlibrary.mvp.model.repo.IGithubUsersRepo;
+import com.hfrad.popularlibrary.mvp.model.repo.retrofit.RetrofitGithubUsersRepo;
 import com.hfrad.popularlibrary.mvp.presenter.UsersPresenter;
 import com.hfrad.popularlibrary.mvp.view.UsersView;
 import com.hfrad.popularlibrary.ui.BackButtonListener;
 import com.hfrad.popularlibrary.ui.adapter.UserRVAdapter;
+import com.hfrad.popularlibrary.ui.network.AndroidNetworkStatus;
+import ru.terrakok.cicerone.Router;
 
 public class UsersFragment extends MvpAppCompatFragment implements UsersView, BackButtonListener {
 
@@ -34,7 +39,12 @@ public class UsersFragment extends MvpAppCompatFragment implements UsersView, Ba
 
     @ProvidePresenter
     UsersPresenter provideUsersPresenter() {
-        return new UsersPresenter(AndroidSchedulers.mainThread());
+        IGithubUsersRepo usersRepo = new RetrofitGithubUsersRepo(GithubApplication.INSTANCE.getApi(),
+                new AndroidNetworkStatus(),
+                Database.getInstance());
+        Router router = GithubApplication.getApplication().getRouter();
+
+        return new UsersPresenter(AndroidSchedulers.mainThread(), usersRepo, router);
     }
 
     public static UsersFragment getInstance(int data) {
