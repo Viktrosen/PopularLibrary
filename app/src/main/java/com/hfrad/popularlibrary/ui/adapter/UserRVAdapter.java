@@ -10,6 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import javax.inject.Inject;
+
+import com.hfrad.popularlibrary.GithubApplication;
 import com.hfrad.popularlibrary.R;
 import com.hfrad.popularlibrary.mvp.presenter.list.IUserListPresenter;
 import com.hfrad.popularlibrary.mvp.view.list.UserItemView;
@@ -19,10 +22,14 @@ import com.hfrad.popularlibrary.mvp.view.image.IImageLoader;
 public class UserRVAdapter extends RecyclerView.Adapter<UserRVAdapter.ViewHolder> {
 
     private IUserListPresenter presenter;
-    private static IImageLoader<ImageView> imageLoader = new GlideImageLoader();
+
+    @Inject
+    IImageLoader<ImageView> imageLoader;
 
     public UserRVAdapter(IUserListPresenter presenter) {
        this.presenter = presenter;
+
+        GithubApplication.INSTANCE.initUserSubcomponent().inject(this);
     }
 
     @NonNull
@@ -58,7 +65,7 @@ public class UserRVAdapter extends RecyclerView.Adapter<UserRVAdapter.ViewHolder
         return presenter.getCount();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements UserItemView {
+    public class ViewHolder extends RecyclerView.ViewHolder implements UserItemView {
         TextView textView;
         ImageView avatarView;
         int position;

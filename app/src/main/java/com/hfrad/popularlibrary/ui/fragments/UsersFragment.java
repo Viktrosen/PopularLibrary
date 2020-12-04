@@ -16,6 +16,7 @@ import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import com.hfrad.popularlibrary.GithubApplication;
 import com.hfrad.popularlibrary.R;
+import com.hfrad.popularlibrary.mvp.model.cache.room.RoomGithubUsersCache;
 import com.hfrad.popularlibrary.mvp.model.entity.room.Database;
 import com.hfrad.popularlibrary.mvp.model.repo.IGithubUsersRepo;
 import com.hfrad.popularlibrary.mvp.model.repo.retrofit.RetrofitGithubUsersRepo;
@@ -37,15 +38,15 @@ public class UsersFragment extends MvpAppCompatFragment implements UsersView, Ba
     @InjectPresenter
     UsersPresenter usersPresenter;
 
-    @ProvidePresenter
-    UsersPresenter provideUsersPresenter() {
-        IGithubUsersRepo usersRepo = new RetrofitGithubUsersRepo(GithubApplication.INSTANCE.getApi(),
-                new AndroidNetworkStatus(),
-                Database.getInstance());
-        Router router = GithubApplication.getApplication().getRouter();
-
-        return new UsersPresenter(AndroidSchedulers.mainThread(), usersRepo, router);
-    }
+//    @ProvidePresenter
+//    UsersPresenter provideUsersPresenter() {
+//        IGithubUsersRepo usersRepo = new RetrofitGithubUsersRepo(GithubApplication.INSTANCE.getApi(),
+//                new AndroidNetworkStatus(),
+//                new RoomGithubUsersCache(Database.getInstance()));
+//        Router router = GithubApplication.getApplication().getRouter();
+//
+//        return new UsersPresenter(AndroidSchedulers.mainThread(), usersRepo, router);
+//    }
 
     public static UsersFragment getInstance(int data) {
         UsersFragment fragment = new UsersFragment();
@@ -89,6 +90,11 @@ public class UsersFragment extends MvpAppCompatFragment implements UsersView, Ba
     @Override
     public void updateList() {
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void release() {
+        GithubApplication.INSTANCE.releaseUserSubcomponent();
     }
 
     @Override

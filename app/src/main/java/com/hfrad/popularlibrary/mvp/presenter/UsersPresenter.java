@@ -5,8 +5,11 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.core.Scheduler;
 import moxy.MvpPresenter;
+import com.hfrad.popularlibrary.GithubApplication;
 import com.hfrad.popularlibrary.mvp.model.entity.GithubUser;
 import com.hfrad.popularlibrary.mvp.model.repo.IGithubUsersRepo;
 import com.hfrad.popularlibrary.mvp.presenter.list.IUserListPresenter;
@@ -20,15 +23,15 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
 
     private static final boolean VERBOSE = true;
 
-    private Router router;
+    @Inject
+    Router router;
+    @Inject
+    IGithubUsersRepo usersRepo;
+    @Inject
+    Scheduler scheduler;
 
-    private final IGithubUsersRepo usersRepo;
-    private final Scheduler scheduler;
-
-    public UsersPresenter(Scheduler scheduler, IGithubUsersRepo usersRepo, Router router) {
-        this.scheduler = scheduler;
-        this.usersRepo = usersRepo;
-        this.router = router;
+    public UsersPresenter() {
+        GithubApplication.INSTANCE.initUserSubcomponent().inject(this);
     }
 
     private class UsersListPresenter implements IUserListPresenter {
@@ -86,6 +89,12 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
     public boolean backPressed() {
         router.exit();
         return true;
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        getViewState().release();
     }
 }
