@@ -1,32 +1,28 @@
 package com.hfrad.popularlibrary.ui.fragments;
 
-import android.graphics.drawable.Drawable;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import moxy.MvpAppCompatFragment;
+import moxy.presenter.InjectPresenter;
+import moxy.presenter.ProvidePresenter;
 import com.hfrad.popularlibrary.R;
 import com.hfrad.popularlibrary.mvp.presenter.UsersPresenter;
 import com.hfrad.popularlibrary.mvp.view.UsersView;
 import com.hfrad.popularlibrary.ui.BackButtonListener;
 import com.hfrad.popularlibrary.ui.adapter.UserRVAdapter;
 
-import java.io.IOException;
-
-import moxy.MvpAppCompatFragment;
-import moxy.presenter.InjectPresenter;
-
-
 public class UsersFragment extends MvpAppCompatFragment implements UsersView, BackButtonListener {
-    public static boolean isViewed = false;
-    private ImageView imageView;
+
     private RecyclerView recyclerView;
     private UserRVAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -35,6 +31,11 @@ public class UsersFragment extends MvpAppCompatFragment implements UsersView, Ba
 
     @InjectPresenter
     UsersPresenter usersPresenter;
+
+    @ProvidePresenter
+    UsersPresenter provideUsersPresenter() {
+        return new UsersPresenter(AndroidSchedulers.mainThread());
+    }
 
     public static UsersFragment getInstance(int data) {
         UsersFragment fragment = new UsersFragment();
@@ -63,16 +64,6 @@ public class UsersFragment extends MvpAppCompatFragment implements UsersView, Ba
         view = inflater.inflate(R.layout.fragment_users, container, false);
 
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_users);
-
-        imageView = view.findViewById(R.id.imageView1);
-        imageView.setImageDrawable(Drawable.createFromPath(usersPresenter.getImage()));
-        isViewed = true;
-        try {
-            usersPresenter.convert();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
 
         return view;
     }

@@ -4,19 +4,23 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hfrad.popularlibrary.R;
+import com.hfrad.popularlibrary.mvp.presenter.list.IListPresenter;
 import com.hfrad.popularlibrary.mvp.presenter.list.IUserListPresenter;
 import com.hfrad.popularlibrary.mvp.view.UserItemView;
-
+import com.hfrad.popularlibrary.mvp.view.image.GlideImageLoader;
+import com.hfrad.popularlibrary.mvp.view.image.IImageLoader;
 
 public class UserRVAdapter extends RecyclerView.Adapter<UserRVAdapter.ViewHolder> {
 
     IUserListPresenter presenter;
+    private static IImageLoader<ImageView> imageLoader = new GlideImageLoader();
 
     public UserRVAdapter(IUserListPresenter presenter) {
        this.presenter = presenter;
@@ -57,17 +61,24 @@ public class UserRVAdapter extends RecyclerView.Adapter<UserRVAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements UserItemView {
         TextView textView;
+        ImageView avatarView;
         int position;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             textView = (TextView)itemView.findViewById(R.id.tv_login);
+            avatarView = (ImageView)itemView.findViewById(R.id.iv_avatar);
         }
 
         @Override
         public void setLogin(String text) {
             textView.setText(text);
+        }
+
+        @Override
+        public void loadAvatar(String url) {
+            imageLoader.loadImage(url, avatarView);
         }
 
         @Override
