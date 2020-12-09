@@ -1,99 +1,98 @@
 package com.hfrad.popularlibrary.ui.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.hfrad.popularlibrary.GithubApplication;
-import com.hfrad.popularlibrary.R;
-import com.hfrad.popularlibrary.mvp.presenter.UsersPresenter;
-import com.hfrad.popularlibrary.mvp.view.UsersView;
-import com.hfrad.popularlibrary.ui.BackButtonListener;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
+import com.hfrad.popularlibrary.GithubApplication;
+import com.hfrad.popularlibrary.R;
+import com.hfrad.popularlibrary.mvp.model.entity.GithubUser;
+import com.hfrad.popularlibrary.mvp.model.entity.room.Database;
+import com.hfrad.popularlibrary.mvp.model.repo.IGithubRepositoriesRepo;
+import com.hfrad.popularlibrary.mvp.model.repo.retrofit.RetrofitGithubRepositoriesRepo;
+import com.hfrad.popularlibrary.mvp.presenter.UserPresenter;
+import com.hfrad.popularlibrary.mvp.view.UserView;
+import com.hfrad.popularlibrary.ui.BackButtonListener;
+import com.hfrad.popularlibrary.ui.adapter.ReposotoriesRVAdapter;
+import com.hfrad.popularlibrary.ui.network.AndroidNetworkStatus;
+import ru.terrakok.cicerone.Router;
 
+public class UserFragment extends MvpAppCompatFragment implements UserView, BackButtonListener {
+    private static final String USER_ARG = "user";
 
-public class UserFragment extends MvpAppCompatFragment implements UsersView, BackButtonListener {
+    private RecyclerView mRecyclerView;
+    private ReposotoriesRVAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
-    private View view;
-
-    private TextView textViewLogin;
-    private TextView textViewRepos;
-
-    public static String login = "";
-    public static String repo = "";
+    private View mView;
 
     @InjectPresenter
-    UsersPresenter userPresenter;
+    UserPresenter mPresenter;
 
     @ProvidePresenter
-    UsersPresenter provideUsersPresenter() {
-        return new UsersPresenter(AndroidSchedulers.mainThread());
+    UserPresenter provideUserPresenter() {
+        final GithubUser user = getArguments().getParcelable(USER_ARG);
+
+        IGithubRepositoriesRepo githubRepositoriesRepo = new RetrofitGithubRepositoriesRepo(GithubApplication.INSTANCE.getApi(),
+                new AndroidNetworkStatus(),
+                Database.getInstance());
+
+        Router router = GithubApplication.getApplication().getRouter();
+
+        return new UserPresenter(user, AndroidSchedulers.mainThread(), githubRepositoriesRepo, router);
     }
 
-
-    public static UserFragment getInstance(int data) {
+    public static UserFragment newInstance(GithubUser user) {
         UserFragment fragment = new UserFragment();
 
-        Bundle bundle = new Bundle();
-        bundle.putInt("key", data);
+        Bundle args = new Bundle();
+        args.putParcelable(USER_ARG, user);
+        fragment.setArguments(args);
 
-
-
-
-
-        fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
     }
 
+    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_user, container, false);
+        mView = inflater.inflate(R.layout.fragment_user, container, false);
 
+        mRecyclerView = (RecyclerView)mView.findViewById(R.id.rv_repositories);
 
-        Log.v("TAG", " LOGINGET " + login);
-
-        textViewLogin = (TextView)view.findViewById(R.id.login);
-        textViewLogin.setText(login);
-
-        textViewRepos = (TextView)view.findViewById(R.id.repos_url);
-        textViewRepos.setText(repo);
-
-        return view;
-    }
-
-
-
-    @Override
-    public boolean backPressed() {
-        return userPresenter.backPressed();
+        return mView;
     }
 
     @Override
     public void init() {
+        mLayoutManager = new LinearLayoutManager(mView.getContext());
 
+        mAdapter = new ReposotoriesRVAdapter(mPresenter.getPresenter());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
     public void updateList() {
+        mAdapter.notifyDataSetChanged();
+    }
 
+    @Override
+    public boolean backPressed() {
+        return mPresenter.backPressed();
     }
 }

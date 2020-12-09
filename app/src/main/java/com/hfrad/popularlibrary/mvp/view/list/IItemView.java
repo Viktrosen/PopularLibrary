@@ -1,4 +1,4 @@
-package com.hfrad.popularlibrary.mvp.view;
+package com.hfrad.popularlibrary.mvp.view.list;
 
 public interface IItemView {
     int getPos();

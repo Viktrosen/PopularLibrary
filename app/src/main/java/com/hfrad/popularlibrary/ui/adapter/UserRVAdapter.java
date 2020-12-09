@@ -11,15 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hfrad.popularlibrary.R;
-import com.hfrad.popularlibrary.mvp.presenter.list.IListPresenter;
 import com.hfrad.popularlibrary.mvp.presenter.list.IUserListPresenter;
-import com.hfrad.popularlibrary.mvp.view.UserItemView;
+import com.hfrad.popularlibrary.mvp.view.list.UserItemView;
 import com.hfrad.popularlibrary.mvp.view.image.GlideImageLoader;
 import com.hfrad.popularlibrary.mvp.view.image.IImageLoader;
 
 public class UserRVAdapter extends RecyclerView.Adapter<UserRVAdapter.ViewHolder> {
 
-    IUserListPresenter presenter;
+    private IUserListPresenter presenter;
     private static IImageLoader<ImageView> imageLoader = new GlideImageLoader();
 
     public UserRVAdapter(IUserListPresenter presenter) {
