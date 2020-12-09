@@ -5,8 +5,11 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.core.Scheduler;
 import moxy.MvpPresenter;
+import com.hfrad.popularlibrary.GithubApplication;
 import com.hfrad.popularlibrary.mvp.model.entity.GithubRepository;
 import com.hfrad.popularlibrary.mvp.model.entity.GithubUser;
 import com.hfrad.popularlibrary.mvp.model.repo.IGithubRepositoriesRepo;
@@ -20,17 +23,18 @@ public class UserPresenter extends MvpPresenter<UserView> {
     private static final String TAG = UserPresenter.class.getSimpleName();
 
     private static final boolean VERBOSE = true;
+    @Inject
+    IGithubRepositoriesRepo githubRepositoriesRepo;
+    @Inject
+    Router router;
+    @Inject
+    Scheduler scheduler;
 
-    private IGithubRepositoriesRepo githubRepositoriesRepo;
-    private Router router;
-    private Scheduler scheduler;
     private final GithubUser user;
 
-    public UserPresenter(GithubUser user, Scheduler scheduler, IGithubRepositoriesRepo repo, Router router) {
+    public UserPresenter(GithubUser user) {
         this.user = user;
-        this.scheduler = scheduler;
-        this.githubRepositoriesRepo = repo;
-        this.router = router;
+        GithubApplication.INSTANCE.initRepositoriesSubcomponent().inject(this);
     }
 
     private class RepositoriesListPresenter implements IRepositoryListPresenter {
@@ -91,5 +95,7 @@ public class UserPresenter extends MvpPresenter<UserView> {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        getViewState().release();
     }
 }

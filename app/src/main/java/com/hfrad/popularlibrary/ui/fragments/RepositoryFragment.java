@@ -9,14 +9,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import javax.inject.Inject;
+
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
+import com.hfrad.popularlibrary.GithubApplication;
 import com.hfrad.popularlibrary.R;
 import com.hfrad.popularlibrary.mvp.model.entity.GithubRepository;
 import com.hfrad.popularlibrary.mvp.presenter.RepositoryPresenter;
 import com.hfrad.popularlibrary.mvp.view.RepositoryView;
 import com.hfrad.popularlibrary.ui.BackButtonListener;
+import ru.terrakok.cicerone.Router;
 
 public class RepositoryFragment extends MvpAppCompatFragment implements RepositoryView, BackButtonListener {
 
@@ -50,11 +54,6 @@ public class RepositoryFragment extends MvpAppCompatFragment implements Reposito
         fragment.setArguments(args);
 
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Nullable

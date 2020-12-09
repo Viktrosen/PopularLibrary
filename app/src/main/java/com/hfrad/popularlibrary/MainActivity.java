@@ -5,6 +5,8 @@ import android.view.View;
 
 import androidx.fragment.app.Fragment;
 
+import javax.inject.Inject;
+
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import com.hfrad.popularlibrary.mvp.presenter.MainPresenter;
@@ -23,13 +25,17 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     @InjectPresenter
     MainPresenter presenter;
 
-    private NavigatorHolder navigatorHolder = GithubApplication.getApplication().getNavigatorHolder();
+    @Inject
+    NavigatorHolder navigatorHolder;
+
     private Navigator navigator = new SupportAppNavigator(this, getSupportFragmentManager(), R.id.container);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        GithubApplication.INSTANCE.getAppComponent().inject(this);
 
         //Creation.exec();
         //Operators.exec();

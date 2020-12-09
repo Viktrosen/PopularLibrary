@@ -7,6 +7,7 @@ import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import com.hfrad.popularlibrary.mvp.model.api.IDataSource;
+import com.hfrad.popularlibrary.mvp.model.cache.IGithubUsersCache;
 import com.hfrad.popularlibrary.mvp.model.entity.GithubUser;
 import com.hfrad.popularlibrary.mvp.model.entity.room.Database;
 import com.hfrad.popularlibrary.mvp.model.entity.room.RoomGithubUser;
@@ -17,53 +18,24 @@ import com.hfrad.popularlibrary.mvp.model.repo.IGithubUsersRepo;
 public class RetrofitGithubUsersRepo implements IGithubUsersRepo {
     private final IDataSource api;
     private INetworkStatus networkStatus;
-    private Database db;
+    final IGithubUsersCache cache;
 
-    public RetrofitGithubUsersRepo(IDataSource api, INetworkStatus status, Database database) {
+    public RetrofitGithubUsersRepo(IDataSource api, INetworkStatus status, IGithubUsersCache cache) {
         this.api = api;
         this.networkStatus = status;
-        this.db = database;
+        this.cache = cache;
     }
 
     @Override
     public Single<List<GithubUser>> getUsers() {
-        return networkStatus.isOnlineSingle().flatMap((isOnline) -> {
-            if (isOnline) {
+        return networkStatus.isOnlineSingle().flatMap((isOline)-> {
+            // Мапируем сетевой статус к данным
+            if (isOline) {
                 return api.getUsers().flatMap((users) -> {
-                    return Single.fromCallable(() -> {
-                        List<RoomGithubUser> roomGithubUsers = new ArrayList<>();
-
-                        for (GithubUser user: users) {
-                            RoomGithubUser roomUser = new RoomGithubUser(user.getId(),
-                                    user.getLogin(),
-                                    user.getAvatarUrl(),
-                                    user.getReposUrl());
-
-                            roomGithubUsers.add(roomUser);
-                        }
-
-                        db.userDao().insert(roomGithubUsers);
-
-                        return users;
-                    });
+                    return cache.putUsers(users).toSingleDefault(users);
                 });
             } else {
-                return Single.fromCallable(() -> {
-                    List<GithubUser> users = new ArrayList<>();
-
-                    List<RoomGithubUser> roomGithubUsers = db.userDao().getAll();
-
-                    for (RoomGithubUser roomGithubUser : roomGithubUsers) {
-                        GithubUser githubUser = new GithubUser(roomGithubUser.getId(),
-                                roomGithubUser.getLogin(),
-                                roomGithubUser.getAvatarUrl(),
-                                roomGithubUser.getReposUrl());
-
-                        users.add(githubUser);
-                    }
-
-                    return users;
-                });
+                return cache.getUsers();
             }
         }).subscribeOn(Schedulers.io());
     }

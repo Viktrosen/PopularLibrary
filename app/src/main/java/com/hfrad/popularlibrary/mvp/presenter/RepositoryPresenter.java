@@ -1,5 +1,7 @@
 package com.hfrad.popularlibrary.mvp.presenter;
 
+import javax.inject.Inject;
+
 import moxy.MvpPresenter;
 import com.hfrad.popularlibrary.GithubApplication;
 import com.hfrad.popularlibrary.mvp.model.entity.GithubRepository;
@@ -10,10 +12,12 @@ public class RepositoryPresenter extends MvpPresenter<RepositoryView> {
 
     private final GithubRepository githubRepository;
 
-    private Router router = GithubApplication.getApplication().getRouter();
+    @Inject
+    Router router;
 
     public RepositoryPresenter(GithubRepository githubRepository) {
         this.githubRepository = githubRepository;
+        GithubApplication.INSTANCE.initRepositoriesSubcomponent().inject(this);
     }
 
     @Override
