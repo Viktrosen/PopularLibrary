@@ -11,12 +11,11 @@ public class GithubUser implements Parcelable {
     @Expose private String avatarUrl;
     @Expose private String reposUrl;
 
-    public GithubUser(String id, String login, String avatar, String repoUrl) {
+    public GithubUser(String id, String login, String avatar) {
         this.id = id;
         this.login = login;
         this.avatarUrl = avatar;
-        this.reposUrl = repoUrl;
-    }
+        }
 
     protected GithubUser(Parcel in) {
         id = in.readString();

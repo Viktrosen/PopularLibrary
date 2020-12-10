@@ -21,7 +21,7 @@ public class ApiModule {
     @Named("baseUrl")
     @Provides
     String baseUrl() {
-        return "https://api.github.com/";
+        return "https://rickandmortyapi.com/api/";
     }
 
     @Singleton
