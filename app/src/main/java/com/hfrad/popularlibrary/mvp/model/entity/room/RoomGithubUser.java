@@ -17,11 +17,10 @@ public class RoomGithubUser {
     public RoomGithubUser() {
     }
 
-    public RoomGithubUser(String id, String login, String avatar, String repoUrl) {
+    public RoomGithubUser(String id, String login, String avatar) {
         this.id = id;
         this.login = login;
         this.avatarUrl = avatar;
-        this.reposUrl = repoUrl;
     }
 
     public String getId() {
