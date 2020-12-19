@@ -28,11 +28,11 @@ public class RepositoryPresenter extends MvpPresenter<RepositoryView> {
 
         String id = githubRepository.getId();
         String title = githubRepository.getName();
-        int forks = githubRepository.getForksCount();
+        String type = githubRepository.getForksCount();
 
         getViewState().setId(id != null ? id : "");
         getViewState().setTitle(title != null ? title : "");
-        getViewState().setForksCount(String.valueOf(forks));
+        getViewState().setType(type != null ? type : "");
     }
 
     public boolean backPressed() {

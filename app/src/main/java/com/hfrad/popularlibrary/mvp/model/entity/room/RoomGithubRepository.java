@@ -20,13 +20,13 @@ public class RoomGithubRepository {
     @NonNull
     public String id;
     public String name;
-    public int forksCount;
+    public String type;
     public String userId;
 
-    public RoomGithubRepository(@NonNull String id, String name, int forksCount, String userId) {
+    public RoomGithubRepository(@NonNull String id, String name, String type, String userId) {
         this.id = id;
         this.name = name;
-        this.forksCount = forksCount;
+        this.type = type;
         this.userId = userId;
     }
 
@@ -39,8 +39,8 @@ public class RoomGithubRepository {
         return name;
     }
 
-    public int getForksCount() {
-        return forksCount;
+    public String getType() {
+        return type;
     }
 
     public String getUserId() {

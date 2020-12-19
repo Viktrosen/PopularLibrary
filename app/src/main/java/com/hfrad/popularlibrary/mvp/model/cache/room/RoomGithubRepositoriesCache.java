@@ -37,7 +37,7 @@ public class RoomGithubRepositoriesCache implements IGithubRepositoriesCache {
             for (RoomGithubRepository roomGithubrepository : roomGithubRepository) {
                 GithubRepository githubRepository = new GithubRepository(roomGithubrepository.getId(),
                         roomGithubrepository.getName(),
-                        roomGithubrepository.getForksCount());
+                        roomGithubrepository.getType());
 
                 githubRepositoryList.add(githubRepository);
             }
