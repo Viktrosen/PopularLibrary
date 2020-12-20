@@ -28,7 +28,7 @@ public class RetrofitGithubRepositoriesRepo implements IGithubRepositoriesRepo {
     public Single<List<GithubRepository>> getRepositories(GithubUser user) {
         return networkStatus.isOnlineSingle().flatMap((isOline)-> {
             if (isOline) {
-                final String url = user.getReposUrl();
+                final String url = user.getLocUrl();
 
                 if (url != null) {
                     return api.getRepositories(url).flatMap((repositories) -> {

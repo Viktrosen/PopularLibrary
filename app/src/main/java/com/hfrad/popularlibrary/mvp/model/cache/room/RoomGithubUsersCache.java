@@ -34,7 +34,8 @@ public class RoomGithubUsersCache implements IGithubUsersCache {
             for (RoomGithubUser roomGithubUser : roomGithubUsers) {
                 GithubUser githubUser = new GithubUser(roomGithubUser.getId(),
                         roomGithubUser.getLogin(),
-                        roomGithubUser.getAvatarUrl());
+                        roomGithubUser.getAvatarUrl(),
+                        roomGithubUser.getLocUrl());
 
                 users.add(githubUser);
             }
@@ -51,7 +52,8 @@ public class RoomGithubUsersCache implements IGithubUsersCache {
             for (GithubUser user: users) {
                 RoomGithubUser roomUser = new RoomGithubUser(user.getId(),
                         user.getLogin(),
-                        user.getAvatarUrl());
+                        user.getAvatarUrl(),
+                        user.getLocUrl());
 
                 roomGithubUsers.add(roomUser);
             }

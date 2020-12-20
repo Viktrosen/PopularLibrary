@@ -13,14 +13,16 @@ public class RoomGithubUser {
     public String login;
     public String avatarUrl;
     public String reposUrl;
+    public String locUrl;
 
     public RoomGithubUser() {
     }
 
-    public RoomGithubUser(String id, String login, String avatar) {
+    public RoomGithubUser(String id, String login, String avatar, String location) {
         this.id = id;
         this.login = login;
         this.avatarUrl = avatar;
+        this.locUrl = location;
     }
 
     public String getId() {
@@ -35,7 +37,9 @@ public class RoomGithubUser {
         return avatarUrl;
     }
 
-    public String getReposUrl() {
-        return reposUrl;
+    public String getLocUrl() {
+        return locUrl;
     }
+
+
 }

@@ -9,13 +9,14 @@ public class GithubUser implements Parcelable {
     @Expose private String id;
     @Expose private String login;
     @Expose private String avatarUrl;
-    @Expose private String reposUrl;
+    @Expose private String locUrl;
 
 
-    public GithubUser(String id, String login, String avatar) {
+    public GithubUser(String id, String login, String avatar,String location) {
         this.id = id;
         this.login = login;
         this.avatarUrl = avatar;
+        this.locUrl = location;
 
     }
 
@@ -23,6 +24,7 @@ public class GithubUser implements Parcelable {
         id = in.readString();
         login = in.readString();
         avatarUrl = in.readString();
+        locUrl = in.readString();
 
     }
 
@@ -31,6 +33,7 @@ public class GithubUser implements Parcelable {
         dest.writeString(id);
         dest.writeString(login);
         dest.writeString(avatarUrl);
+        dest.writeString(locUrl);
     }
 
     @Override
@@ -62,8 +65,8 @@ public class GithubUser implements Parcelable {
         return avatarUrl;
     }
 
-    public String getReposUrl() {
-        return reposUrl;
+    public String getLocUrl() {
+        return locUrl;
     }
 
 
