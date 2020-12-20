@@ -17,7 +17,7 @@ public class ApiHolder {
                                      .excludeFieldsWithoutExposeAnnotation().create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.github.com/")
+                .baseUrl("https://rickandmortyapi.com/api/")
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
@@ -28,5 +28,4 @@ public class ApiHolder {
 
     public IDataSource getDataSource() {
         return dataSource;
-    }
-}
+    }}

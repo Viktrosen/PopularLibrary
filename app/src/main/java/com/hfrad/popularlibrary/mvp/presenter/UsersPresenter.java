@@ -82,7 +82,7 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
             usersListPresenter.users.addAll(repos);
             getViewState().updateList();
         }, (e) -> {
-            Log.w(TAG, "Error" + e.getMessage());
+            Log.w(TAG, "Error: " + e.getMessage());
         });
     }
 

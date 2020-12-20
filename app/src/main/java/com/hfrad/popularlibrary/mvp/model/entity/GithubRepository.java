@@ -8,22 +8,18 @@ import com.google.gson.annotations.Expose;
 public class GithubRepository implements Parcelable {
     @Expose private String id;
     @Expose private String name;
-    @Expose private Integer forksCount;
+    @Expose private String type;
 
-    public GithubRepository(String id, String name, int forksCount) {
+    public GithubRepository(String id, String name, String type) {
         this.id = id;
         this.name = name;
-        this.forksCount = forksCount;
+        this.type = type;
     }
 
     protected GithubRepository(Parcel in) {
         id = in.readString();
         name = in.readString();
-        if (in.readByte() == 0) {
-            forksCount = null;
-        } else {
-            forksCount = in.readInt();
-        }
+        type = in.readString();
     }
 
     public String getId() {
@@ -34,20 +30,15 @@ public class GithubRepository implements Parcelable {
         return name;
     }
 
-    public Integer getForksCount() {
-        return forksCount;
+    public String getType() {
+        return type;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(name);
-        if (forksCount == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(forksCount);
-        }
+        dest.writeString(type);
     }
 
     @Override

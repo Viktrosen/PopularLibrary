@@ -84,7 +84,7 @@ public class RepositoryFragment extends MvpAppCompatFragment implements Reposito
     }
 
     @Override
-    public void setForksCount(String text) {
+    public void setType(String text) {
         tv_forksCount.setText(text);
     }
 

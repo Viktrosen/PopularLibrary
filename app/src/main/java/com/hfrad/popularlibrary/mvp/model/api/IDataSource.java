@@ -10,7 +10,7 @@ import com.hfrad.popularlibrary.mvp.model.entity.GithubUser;
 
 public interface IDataSource {
 
-    @GET("/users")
+    @GET("/character")
     Single<List<GithubUser>> getUsers();
 
     @GET

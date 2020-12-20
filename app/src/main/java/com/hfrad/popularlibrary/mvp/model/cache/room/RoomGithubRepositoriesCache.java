@@ -37,7 +37,7 @@ public class RoomGithubRepositoriesCache implements IGithubRepositoriesCache {
             for (RoomGithubRepository roomGithubrepository : roomGithubRepository) {
                 GithubRepository githubRepository = new GithubRepository(roomGithubrepository.getId(),
                         roomGithubrepository.getName(),
-                        roomGithubrepository.getForksCount());
+                        roomGithubrepository.getType());
 
                 githubRepositoryList.add(githubRepository);
             }
@@ -54,7 +54,7 @@ public class RoomGithubRepositoriesCache implements IGithubRepositoriesCache {
             List<RoomGithubRepository> roomGithubRepositories = new ArrayList<>();
 
             for (GithubRepository repo: repositories) {
-                RoomGithubRepository roomRepo = new RoomGithubRepository(repo.getId(), repo.getName(), repo.getForksCount(), roomUser.getId());
+                RoomGithubRepository roomRepo = new RoomGithubRepository(repo.getId(), repo.getName(), repo.getType(), roomUser.getId());
                 roomGithubRepositories.add(roomRepo);
             }
 

@@ -35,7 +35,7 @@ public class RoomGithubUsersCache implements IGithubUsersCache {
                 GithubUser githubUser = new GithubUser(roomGithubUser.getId(),
                         roomGithubUser.getLogin(),
                         roomGithubUser.getAvatarUrl(),
-                        roomGithubUser.getReposUrl());
+                        roomGithubUser.getLocUrl());
 
                 users.add(githubUser);
             }
@@ -53,7 +53,7 @@ public class RoomGithubUsersCache implements IGithubUsersCache {
                 RoomGithubUser roomUser = new RoomGithubUser(user.getId(),
                         user.getLogin(),
                         user.getAvatarUrl(),
-                        user.getReposUrl());
+                        user.getLocUrl());
 
                 roomGithubUsers.add(roomUser);
             }
