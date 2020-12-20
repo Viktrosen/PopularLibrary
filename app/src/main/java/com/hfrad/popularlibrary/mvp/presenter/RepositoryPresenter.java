@@ -28,7 +28,7 @@ public class RepositoryPresenter extends MvpPresenter<RepositoryView> {
 
         String id = githubRepository.getId();
         String title = githubRepository.getName();
-        String type = githubRepository.getForksCount();
+        String type = githubRepository.getType();
 
         getViewState().setId(id != null ? id : "");
         getViewState().setTitle(title != null ? title : "");

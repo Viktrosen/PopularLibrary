@@ -30,7 +30,7 @@ public class GithubRepository implements Parcelable {
         return name;
     }
 
-    public String getForksCount() {
+    public String getType() {
         return type;
     }
 
