@@ -12,6 +12,7 @@ import moxy.MvpPresenter;
 import com.hfrad.popularlibrary.GithubApplication;
 import com.hfrad.popularlibrary.mvp.model.entity.GithubRepository;
 import com.hfrad.popularlibrary.mvp.model.entity.GithubUser;
+import com.hfrad.popularlibrary.mvp.model.entity.Result;
 import com.hfrad.popularlibrary.mvp.model.repo.IGithubRepositoriesRepo;
 import com.hfrad.popularlibrary.mvp.presenter.list.IRepositoryListPresenter;
 import com.hfrad.popularlibrary.mvp.view.UserView;
@@ -30,9 +31,9 @@ public class UserPresenter extends MvpPresenter<UserView> {
     @Inject
     Scheduler scheduler;
 
-    private final GithubUser user;
+    private final Result user;
 
-    public UserPresenter(GithubUser user) {
+    public UserPresenter(Result user) {
         this.user = user;
         GithubApplication.INSTANCE.initRepositoriesSubcomponent().inject(this);
     }

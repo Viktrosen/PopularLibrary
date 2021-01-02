@@ -16,6 +16,7 @@ import moxy.presenter.ProvidePresenter;
 import com.hfrad.popularlibrary.GithubApplication;
 import com.hfrad.popularlibrary.R;
 import com.hfrad.popularlibrary.mvp.model.entity.GithubUser;
+import com.hfrad.popularlibrary.mvp.model.entity.Result;
 import com.hfrad.popularlibrary.mvp.presenter.UserPresenter;
 import com.hfrad.popularlibrary.mvp.view.UserView;
 import com.hfrad.popularlibrary.ui.BackButtonListener;
@@ -35,7 +36,7 @@ public class UserFragment extends MvpAppCompatFragment implements UserView, Back
 
     @ProvidePresenter
     UserPresenter provideUserPresenter() {
-        final GithubUser user = getArguments().getParcelable(USER_ARG);
+        final Result user = getArguments().getParcelable(USER_ARG);
 
         return new UserPresenter(user);
     }
