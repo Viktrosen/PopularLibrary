@@ -13,8 +13,7 @@ public class ApiHolder {
     private IDataSource dataSource;
 
     ApiHolder() {
-        Gson gson = new GsonBuilder().setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                                     .excludeFieldsWithoutExposeAnnotation().create();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://rickandmortyapi.com/api/")

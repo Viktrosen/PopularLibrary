@@ -27,8 +27,7 @@ public class ApiModule {
     @Singleton
     @Provides
     Gson gson() {
-        return new GsonBuilder().setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .excludeFieldsWithoutExposeAnnotation().create();
+        return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     }
 
     @Singleton

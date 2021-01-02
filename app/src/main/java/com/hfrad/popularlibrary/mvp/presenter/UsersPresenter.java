@@ -11,6 +11,7 @@ import io.reactivex.rxjava3.core.Scheduler;
 import moxy.MvpPresenter;
 import com.hfrad.popularlibrary.GithubApplication;
 import com.hfrad.popularlibrary.mvp.model.entity.GithubUser;
+import com.hfrad.popularlibrary.mvp.model.entity.Result;
 import com.hfrad.popularlibrary.mvp.model.repo.IGithubUsersRepo;
 import com.hfrad.popularlibrary.mvp.presenter.list.IUserListPresenter;
 import com.hfrad.popularlibrary.mvp.view.UsersView;
@@ -37,6 +38,7 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
     private class UsersListPresenter implements IUserListPresenter {
 
         private List<GithubUser> users = new ArrayList<>();
+        private List<Result> characters = new ArrayList<>();
 
         @Override
         public void onItemClick(UserItemView view) {
@@ -50,14 +52,14 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
 
         @Override
         public void bindView(UserItemView view) {
-            GithubUser user = users.get(view.getPos());
-            view.setLogin(user.getLogin());
-            view.loadAvatar(user.getAvatarUrl());
+            Result character = characters.get(view.getPos());
+            view.setLogin(character.getName());
+            view.loadAvatar(character.getImage());
         }
 
         @Override
         public int getCount() {
-            return users.size();
+            return characters.size();
         }
     }
 
@@ -77,9 +79,9 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
     }
 
     private void loadData() {
-        usersRepo.getUsers().observeOn(scheduler).subscribe(repos -> {
-            usersListPresenter.users.clear();
-            usersListPresenter.users.addAll(repos);
+        usersRepo.getCharacters().observeOn(scheduler).subscribe(repos -> {
+            usersListPresenter.characters.clear();
+            usersListPresenter.characters.addAll(repos.getResults());
             getViewState().updateList();
         }, (e) -> {
             Log.w(TAG, "Error: " + e.getMessage());
