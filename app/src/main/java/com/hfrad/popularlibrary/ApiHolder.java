@@ -16,7 +16,7 @@ public class ApiHolder {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://rickandmortyapi.com/api/")
+                .baseUrl("http://numbersapi.com/")
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();

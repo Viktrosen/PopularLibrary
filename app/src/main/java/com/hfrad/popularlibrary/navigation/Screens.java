@@ -3,7 +3,7 @@ package com.hfrad.popularlibrary.navigation;
 import androidx.fragment.app.Fragment;
 
 import com.hfrad.popularlibrary.mvp.model.entity.GithubRepository;
-import com.hfrad.popularlibrary.mvp.model.entity.GithubUser;
+import com.hfrad.popularlibrary.mvp.model.entity.Number;
 import com.hfrad.popularlibrary.ui.fragments.RepositoryFragment;
 import com.hfrad.popularlibrary.ui.fragments.UserFragment;
 import com.hfrad.popularlibrary.ui.fragments.UsersFragment;
@@ -18,9 +18,9 @@ public class Screens {
     }
 
     public static class UserScreen extends SupportAppScreen {
-        private final GithubUser user;
+        private final Number user;
 
-        public UserScreen(GithubUser user) {
+        public UserScreen(Number user) {
             this.user = user;
         }
 

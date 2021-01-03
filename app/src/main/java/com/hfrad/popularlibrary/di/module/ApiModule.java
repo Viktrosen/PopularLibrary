@@ -21,13 +21,14 @@ public class ApiModule {
     @Named("baseUrl")
     @Provides
     String baseUrl() {
-        return "https://rickandmortyapi.com/api/";
+        return "http://numbersapi.com/random/";
     }
 
     @Singleton
     @Provides
     Gson gson() {
-        return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        return new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation().create();
     }
 
     @Singleton

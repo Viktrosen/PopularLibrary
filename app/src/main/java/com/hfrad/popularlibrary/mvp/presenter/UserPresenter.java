@@ -11,8 +11,7 @@ import io.reactivex.rxjava3.core.Scheduler;
 import moxy.MvpPresenter;
 import com.hfrad.popularlibrary.GithubApplication;
 import com.hfrad.popularlibrary.mvp.model.entity.GithubRepository;
-import com.hfrad.popularlibrary.mvp.model.entity.GithubUser;
-import com.hfrad.popularlibrary.mvp.model.entity.Result;
+import com.hfrad.popularlibrary.mvp.model.entity.Number;
 import com.hfrad.popularlibrary.mvp.model.repo.IGithubRepositoriesRepo;
 import com.hfrad.popularlibrary.mvp.presenter.list.IRepositoryListPresenter;
 import com.hfrad.popularlibrary.mvp.view.UserView;
@@ -31,9 +30,9 @@ public class UserPresenter extends MvpPresenter<UserView> {
     @Inject
     Scheduler scheduler;
 
-    private final Result user;
+    private final Number user;
 
-    public UserPresenter(Result user) {
+    public UserPresenter(Number user) {
         this.user = user;
         GithubApplication.INSTANCE.initRepositoriesSubcomponent().inject(this);
     }

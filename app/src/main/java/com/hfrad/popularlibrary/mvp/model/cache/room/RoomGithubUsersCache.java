@@ -8,8 +8,7 @@ import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import com.hfrad.popularlibrary.mvp.model.cache.IGithubUsersCache;
-import com.hfrad.popularlibrary.mvp.model.entity.Response;
-import com.hfrad.popularlibrary.mvp.model.entity.Result;
+import com.hfrad.popularlibrary.mvp.model.entity.Number;
 import com.hfrad.popularlibrary.mvp.model.entity.room.Database;
 import com.hfrad.popularlibrary.mvp.model.entity.room.RoomGithubUser;
 
@@ -21,40 +20,41 @@ public class RoomGithubUsersCache implements IGithubUsersCache {
     }
 
     @Override
-    public Single<Response> getUsers() {
+    public Single<Number> getUsers() {
         return Single.fromCallable(()->{
-            List<RoomGithubUser> roomGithubUsers = db.userDao().getAll();
+            RoomGithubUser roomGithubUsers = db.userDao().getAll();
 
-            Response users = new Response();
 
-            /*for (RoomGithubUser roomGithubUser : roomGithubUsers) {
-                Result githubUser = new Result(roomGithubUser.getId(),
-                        roomGithubUser.getLogin(),
-                        roomGithubUser.getAvatarUrl(),
-                        roomGithubUser.getLocUrl());
 
-                users.add(githubUser);
-            }*/
 
-            return users;
+                Number number = new Number(roomGithubUsers.getId(),
+                        roomGithubUsers.getLogin(),
+                        roomGithubUsers.getAvatarUrl(),
+                        roomGithubUsers.getLocUrl());
+
+
+
+
+            return number;
         });
     }
 
     @Override
-    public Completable putUsers(Response users) {
+    public Completable putUsers(Number users) {
         return Completable.fromAction(()->{
             List<RoomGithubUser> roomGithubUsers = new ArrayList<>();
 
-            for (Result user: users.getResults()) {
-                RoomGithubUser roomUser = new RoomGithubUser(user.getId(),
-                        user.getName(),
-                        user.getImage(),
-                        user.getLocation().getName());
+
+                RoomGithubUser roomUser = new RoomGithubUser(users.getId(),
+                        users.getLogin(),
+                        users.getAvatarUrl(),
+                        users.getLocUrl());
 
                 roomGithubUsers.add(roomUser);
-            }
+
 
             db.userDao().insert(roomGithubUsers);
         }).subscribeOn(Schedulers.io());
     }
 }
+

@@ -8,8 +8,7 @@ import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import com.hfrad.popularlibrary.mvp.model.cache.IGithubRepositoriesCache;
 import com.hfrad.popularlibrary.mvp.model.entity.GithubRepository;
-import com.hfrad.popularlibrary.mvp.model.entity.GithubUser;
-import com.hfrad.popularlibrary.mvp.model.entity.Result;
+import com.hfrad.popularlibrary.mvp.model.entity.Number;
 import com.hfrad.popularlibrary.mvp.model.entity.room.Database;
 import com.hfrad.popularlibrary.mvp.model.entity.room.RoomGithubRepository;
 import com.hfrad.popularlibrary.mvp.model.entity.room.RoomGithubUser;
@@ -22,10 +21,10 @@ public class RoomGithubRepositoriesCache implements IGithubRepositoriesCache {
     }
 
     @Override
-    public Single<List<GithubRepository>> getUserRepos(Result user) {
+    public Single<List<GithubRepository>> getUserRepos(Number user) {
         return Single.fromCallable(()-> {
 
-            RoomGithubUser roomUser = db.userDao().findByLogin(user.getName());
+            RoomGithubUser roomUser = db.userDao().findByLogin(user.getLogin());
 
             if (roomUser == null) {
                 throw new RuntimeException("No such user in cache");
@@ -48,9 +47,9 @@ public class RoomGithubRepositoriesCache implements IGithubRepositoriesCache {
     }
 
     @Override
-    public Completable putUserRepos(Result user, List<GithubRepository> repositories) {
+    public Completable putUserRepos(Number user, List<GithubRepository> repositories) {
         return Completable.fromAction(()->{
-            RoomGithubUser roomUser = db.userDao().findByLogin(user.getName());
+            RoomGithubUser roomUser = db.userDao().findByLogin(user.getLogin());
 
             List<RoomGithubRepository> roomGithubRepositories = new ArrayList<>();
 
