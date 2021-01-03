@@ -10,8 +10,7 @@ import javax.inject.Inject;
 import io.reactivex.rxjava3.core.Scheduler;
 import moxy.MvpPresenter;
 import com.hfrad.popularlibrary.GithubApplication;
-import com.hfrad.popularlibrary.mvp.model.entity.GithubUser;
-import com.hfrad.popularlibrary.mvp.model.entity.Result;
+import com.hfrad.popularlibrary.mvp.model.entity.Number;
 import com.hfrad.popularlibrary.mvp.model.repo.IGithubUsersRepo;
 import com.hfrad.popularlibrary.mvp.presenter.list.IUserListPresenter;
 import com.hfrad.popularlibrary.mvp.view.UsersView;
@@ -37,8 +36,8 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
 
     private class UsersListPresenter implements IUserListPresenter {
 
-        private List<GithubUser> users = new ArrayList<>();
-        private List<Result> characters = new ArrayList<>();
+        private List<Number> users = new ArrayList<>();
+
 
         @Override
         public void onItemClick(UserItemView view) {
@@ -46,20 +45,20 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
                 Log.v(TAG, " onItemClick " + view.getPos());
             }
 
-            GithubUser user = users.get(view.getPos());
+            Number user = users.get(view.getPos());
             router.navigateTo(new Screens.UserScreen(user));
         }
 
         @Override
         public void bindView(UserItemView view) {
-            Result character = characters.get(view.getPos());
-            view.setLogin(character.getName());
-            view.loadAvatar(character.getImage());
+            Number character = users.get(view.getPos());
+            view.setLogin(character.getLogin());
+            view.loadAvatar(character.getAvatarUrl());
         }
 
         @Override
         public int getCount() {
-            return characters.size();
+            return users.size();
         }
     }
 
@@ -80,8 +79,8 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
 
     private void loadData() {
         usersRepo.getCharacters().observeOn(scheduler).subscribe(repos -> {
-            usersListPresenter.characters.clear();
-            usersListPresenter.characters.addAll(repos.getResults());
+            usersListPresenter.users.clear();
+            usersListPresenter.users.add(repos);
             getViewState().updateList();
         }, (e) -> {
             Log.w(TAG, "Error: " + e.getMessage());

@@ -29,7 +29,7 @@ public interface UserDao {
     void delete(List<RoomGithubUser> users);
 
     @Query("SELECT * FROM RoomGithubUser")
-    List<RoomGithubUser> getAll();
+    RoomGithubUser getAll();
 
     @Query("SELECT * FROM RoomGithubUser WHERE login = :login LIMIT 1")
     RoomGithubUser findByLogin(String login);

@@ -8,9 +8,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import com.hfrad.popularlibrary.mvp.model.api.IDataSource;
 import com.hfrad.popularlibrary.mvp.model.cache.IGithubRepositoriesCache;
 import com.hfrad.popularlibrary.mvp.model.entity.GithubRepository;
-import com.hfrad.popularlibrary.mvp.model.entity.GithubUser;
-import com.hfrad.popularlibrary.mvp.model.entity.Result;
-import com.hfrad.popularlibrary.mvp.model.entity.room.Database;
+import com.hfrad.popularlibrary.mvp.model.entity.Number;
 import com.hfrad.popularlibrary.mvp.model.network.INetworkStatus;
 import com.hfrad.popularlibrary.mvp.model.repo.IGithubRepositoriesRepo;
 
@@ -26,10 +24,10 @@ public class RetrofitGithubRepositoriesRepo implements IGithubRepositoriesRepo {
     }
 
     @Override
-    public Single<List<GithubRepository>> getRepositories(Result user) {
+    public Single<List<GithubRepository>> getRepositories(Number user) {
         return networkStatus.isOnlineSingle().flatMap((isOline)-> {
             if (isOline) {
-                final String url = user.getLocation().getName();
+                final String url = user.getLocUrl();
 
                 if (url != null) {
                     return api.getRepositories(url).flatMap((repositories) -> {

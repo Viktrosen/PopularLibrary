@@ -6,16 +6,15 @@ import io.reactivex.rxjava3.core.Single;
 import retrofit2.http.GET;
 import retrofit2.http.Url;
 import com.hfrad.popularlibrary.mvp.model.entity.GithubRepository;
-import com.hfrad.popularlibrary.mvp.model.entity.GithubUser;
-import com.hfrad.popularlibrary.mvp.model.entity.Response;
-import com.hfrad.popularlibrary.mvp.model.entity.Result;
+import com.hfrad.popularlibrary.mvp.model.entity.Number;
 
 public interface IDataSource {
 
-    @GET("/character")
-    Single<Response> getUsers();
+    @GET("/random/year?json")
+    Single<Number> getUsers();
 
     @GET
     Single<List<GithubRepository>> getRepositories(@Url String url);
 
 }
+
