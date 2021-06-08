@@ -10,22 +10,15 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
-import moxy.presenter.ProvidePresenter;
+
 import com.hfrad.popularlibrary.GithubApplication;
 import com.hfrad.popularlibrary.R;
-import com.hfrad.popularlibrary.mvp.model.cache.room.RoomGithubUsersCache;
-import com.hfrad.popularlibrary.mvp.model.entity.room.Database;
-import com.hfrad.popularlibrary.mvp.model.repo.IGithubUsersRepo;
-import com.hfrad.popularlibrary.mvp.model.repo.retrofit.RetrofitGithubUsersRepo;
-import com.hfrad.popularlibrary.mvp.presenter.UsersPresenter;
+import com.hfrad.popularlibrary.mvp.presenter.NumberPresenter;
 import com.hfrad.popularlibrary.mvp.view.UsersView;
 import com.hfrad.popularlibrary.ui.BackButtonListener;
 import com.hfrad.popularlibrary.ui.adapter.UserRVAdapter;
-import com.hfrad.popularlibrary.ui.network.AndroidNetworkStatus;
-import ru.terrakok.cicerone.Router;
 
 public class UsersFragment extends MvpAppCompatFragment implements UsersView, BackButtonListener {
 
@@ -36,17 +29,17 @@ public class UsersFragment extends MvpAppCompatFragment implements UsersView, Ba
     private View view;
 
     @InjectPresenter
-    UsersPresenter usersPresenter;
+    NumberPresenter numberPresenter;
 
-//    @ProvidePresenter
-//    UsersPresenter provideUsersPresenter() {
-//        IGithubUsersRepo usersRepo = new RetrofitGithubUsersRepo(GithubApplication.INSTANCE.getApi(),
-//                new AndroidNetworkStatus(),
-//                new RoomGithubUsersCache(Database.getInstance()));
-//        Router router = GithubApplication.getApplication().getRouter();
-//
-//        return new UsersPresenter(AndroidSchedulers.mainThread(), usersRepo, router);
-//    }
+    /*@ProvidePresenter
+    NumberPresenter provideUsersPresenter() {
+        IGithubUsersRepo usersRepo = new RetrofitGithubUsersRepo(GithubApplication.INSTANCE.getApi(),
+                new AndroidNetworkStatus(),
+                new RoomGithubUsersCache(Database.getInstance()));
+        Router router = GithubApplication.getApplication().getRouter();
+
+        return new NumberPresenter(AndroidSchedulers.mainThread(), usersRepo, router);
+    }*/
 
     public static UsersFragment getInstance(int data) {
         UsersFragment fragment = new UsersFragment();
@@ -82,7 +75,7 @@ public class UsersFragment extends MvpAppCompatFragment implements UsersView, Ba
     @Override
     public void init() {
         layoutManager = new LinearLayoutManager(view.getContext());
-        adapter = new UserRVAdapter(usersPresenter.getUsersListPresenter());
+        adapter = new UserRVAdapter(numberPresenter.getUsersListPresenter());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }
@@ -99,6 +92,6 @@ public class UsersFragment extends MvpAppCompatFragment implements UsersView, Ba
 
     @Override
     public boolean backPressed() {
-        return usersPresenter.backPressed();
+        return numberPresenter.backPressed();
     }
 }

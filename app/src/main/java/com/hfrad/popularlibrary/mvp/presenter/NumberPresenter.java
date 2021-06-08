@@ -18,8 +18,8 @@ import com.hfrad.popularlibrary.mvp.view.list.UserItemView;
 import com.hfrad.popularlibrary.navigation.Screens;
 import ru.terrakok.cicerone.Router;
 
-public class UsersPresenter extends MvpPresenter<UsersView>  {
-    private static final String TAG = UsersPresenter.class.getSimpleName();
+public class NumberPresenter extends MvpPresenter<UsersView>  {
+    private static final String TAG = NumberPresenter.class.getSimpleName();
 
     private static final boolean VERBOSE = true;
 
@@ -30,11 +30,14 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
     @Inject
     Scheduler scheduler;
 
-    public UsersPresenter() {
-        GithubApplication.INSTANCE.initUserSubcomponent().inject(this);
+    public NumberPresenter() {
+       // GithubApplication.INSTANCE.initUserSubcomponent().inject(this);
     }
 
-    private class UsersListPresenter implements IUserListPresenter {
+
+
+
+    private class NumbersListPresenter implements IUserListPresenter {
 
         private List<Number> users = new ArrayList<>();
 
@@ -62,10 +65,10 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
         }
     }
 
-    private UsersListPresenter usersListPresenter = new UsersListPresenter();
+    private NumbersListPresenter numbersListPresenter = new NumbersListPresenter();
 
-    public UsersListPresenter getUsersListPresenter() {
-        return usersListPresenter;
+    public NumbersListPresenter getUsersListPresenter() {
+        return numbersListPresenter;
     }
 
     @Override
@@ -79,8 +82,8 @@ public class UsersPresenter extends MvpPresenter<UsersView>  {
 
     private void loadData() {
         usersRepo.getCharacters().observeOn(scheduler).subscribe(repos -> {
-            usersListPresenter.users.clear();
-            usersListPresenter.users.add(repos);
+            numbersListPresenter.users.clear();
+            numbersListPresenter.users.add(repos);
             getViewState().updateList();
         }, (e) -> {
             Log.w(TAG, "Error: " + e.getMessage());
