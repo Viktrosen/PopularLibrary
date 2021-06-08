@@ -50,6 +50,14 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
     implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
 
+    testImplementation "org.mockito:mockito-core:2.19.0"
+    testImplementation 'org.mockito:mockito-inline:2.8.9'
+    testImplementation('com.nhaarman:mockito-kotlin:1.5.0') {
+        exclude group: 'org.jetbrains.kotlin'
+        exclude group: 'org.mockito'
+    }
+
+
     implementation 'com.github.bumptech.glide:glide:4.11.0'
 
     def room_version = "2.2.5"
